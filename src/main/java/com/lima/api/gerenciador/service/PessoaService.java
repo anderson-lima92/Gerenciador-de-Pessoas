@@ -85,12 +85,6 @@ public class PessoaService {
 	public void atualizarPessoa(String cpf, PessoaDTO update) {
 
 		log.info("....................Atualaizando Dados....................");
-		
-		Pessoa _pessoa = new Pessoa();
-		_pessoa.setNome(update.getNome());
-		_pessoa.setCpf(update.getCpf());
-		_pessoa.setDataNascimento(update.getDataNascimento());
-		_pessoa.setEnderecos(update.getEnderecos());
 
 		try {
 			cpf = cpf.replaceAll("[\\s.-]", "");
