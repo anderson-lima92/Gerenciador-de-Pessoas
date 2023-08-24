@@ -110,7 +110,7 @@ public class PessoaService {
 				log.info("....................Dados Atualizados com sucesso!....................");
 
 			} else {
-				throw new IllegalArgumentException("CPF: (" + cpf + ") não encontrado.");
+				throw new IllegalArgumentException("CPF (" + cpf + ") não encontrado.");
 			}
 
 		} catch (Exception e) {
@@ -139,7 +139,13 @@ public class PessoaService {
 	}
 
 	public List<Pessoa> listarTodasPessoas() {
-		return pessoaRepository.findAll();
+	    List<Pessoa> pessoas = pessoaRepository.findAll();
+	    
+	    if (pessoas.isEmpty()) {
+	        throw new RuntimeException("Não há dados para esta pesquisa");
+	    }
+	    
+	    return pessoas;
 	}
 
 	public Map<String, String> buscarEnderecoPrincipalPorCpf(String cpf) {
