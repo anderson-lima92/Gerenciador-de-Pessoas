@@ -38,7 +38,7 @@ public class PessoaService {
 	public Pessoa criarPessoa(PessoaDTO pessoaDTO) {
 
 		log.info("....................Criando Pessoa....................");
-		
+
 		Pessoa pessoa = new Pessoa();
 		pessoa.setNome(pessoaDTO.getNome());
 		pessoa.setCpf(pessoaDTO.getCpf());
@@ -52,7 +52,7 @@ public class PessoaService {
 			validaEnderecos(pessoa);
 
 			String dataNascimento = validaDataNascimento(pessoa.getDataNascimento());
-			
+
 			pessoa.setDataNascimento(dataNascimento);
 
 			Pessoa pessoaSalva = pessoaRepository.save(pessoa);
@@ -96,16 +96,18 @@ public class PessoaService {
 			if (pessoaEncontrada.isPresent()) {
 				Pessoa pessoa = pessoaEncontrada.get();
 				pessoa.setNome(update.getNome());
-				
+
 				String dataNascimento = validaDataNascimento(update.getDataNascimento());
-				
+
 				pessoa.setDataNascimento(dataNascimento);
-				
+
 				pessoa.setEnderecos(update.getEnderecos());
 
 				validaEnderecos(pessoa);
 
 				pessoaRepository.save(pessoa);
+
+				log.info("....................Dados Atualizados com sucesso!....................");
 
 			} else {
 				throw new IllegalArgumentException("CPF: (" + cpf + ") não encontrado.");
@@ -126,44 +128,44 @@ public class PessoaService {
 			validaCpf(cpf);
 
 			Optional<Pessoa> pessoa = pessoaRepository.findByCpf(cpf);
-			
+
 			if (pessoa.isPresent()) {
 				pessoaRepository.deleteById(pessoa.get().getId());
 			}
-			
 
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Erro ao deletar pessoa: " + e.getMessage());
 		}
 	}
-	
-    public List<Pessoa> listarTodasPessoas() {
-        return pessoaRepository.findAll();
-    }
-    
+
+	public List<Pessoa> listarTodasPessoas() {
+		return pessoaRepository.findAll();
+	}
+
 	public Map<String, String> buscarEnderecoPrincipalPorCpf(String cpf) {
 		cpf = cpf.replaceAll("[\\s.-]", "");
 		validaCpf(cpf);
-	    Pessoa pessoa = pessoaRepository.findEnderecoPrincipalByCpf(cpf);
-	    for (Endereco endereco : pessoa.getEnderecos()) {
-	        if (endereco.isEnderecoPrincipal()) {
-	            Map<String, String> enderecoPrincipal = new HashMap<>();
-	            enderecoPrincipal.put("logradouro", endereco.getLogradouro());
-	            enderecoPrincipal.put("cep", endereco.getCep());
-	            enderecoPrincipal.put("numero", endereco.getNumero().toString());
-	            enderecoPrincipal.put("cidade", endereco.getCidade());
-	            return enderecoPrincipal;
-	        }
-	    }
-	    throw new RuntimeException("Não foi encontrado um endereço principal para esta pessoa.");
+		Pessoa pessoa = pessoaRepository.findEnderecoPrincipalByCpf(cpf);
+		for (Endereco endereco : pessoa.getEnderecos()) {
+			if (endereco.isEnderecoPrincipal()) {
+				Map<String, String> enderecoPrincipal = new HashMap<>();
+				enderecoPrincipal.put("logradouro", endereco.getLogradouro());
+				enderecoPrincipal.put("cep", endereco.getCep());
+				enderecoPrincipal.put("numero", endereco.getNumero().toString());
+				enderecoPrincipal.put("cidade", endereco.getCidade());
+				return enderecoPrincipal;
+			}
+		}
+		throw new RuntimeException("Não foi encontrado um endereço principal para esta pessoa.");
 	}
-    
+
 	private void validaCpf(String cpf) {
 		if (cpf.length() != 11) {
 			throw new IllegalArgumentException("CPF inválido: (" + cpf + ") CPF deve conter 11 dígitos.");
 		}
 		Optional<Pessoa> pessoaExistente = pessoaRepository.findByCpf(cpf);
-		if (!(request.getMethod().equals("PUT") || request.getMethod().equals("GET") || request.getMethod().equals("DELETE"))) {
+		if (!(request.getMethod().equals("PUT") || request.getMethod().equals("GET")
+				|| request.getMethod().equals("DELETE"))) {
 			if (pessoaExistente.isPresent()) {
 				throw new IllegalArgumentException("Já existe uma pessoa com o CPF informado....");
 			}
@@ -171,11 +173,11 @@ public class PessoaService {
 
 		if (request.getMethod().equals("GET") || request.getMethod().equals("DELETE")) {
 			if (!pessoaExistente.isPresent()) {
-				throw new IllegalArgumentException("CPF: (" + cpf + ") não encontrado.");
+				throw new IllegalArgumentException("CPF (" + cpf + ") não encontrado.");
 			}
 		}
 	}
-	
+
 	private void validaEnderecos(Pessoa pessoa) {
 		boolean temEnderecoPrincipal = false;
 		int countEnderecoPrincipal = 0;
@@ -228,22 +230,23 @@ public class PessoaService {
 			if (dataNascimento.contains("-") || dataNascimento.contains("/") || dataNascimento.contains(".")) {
 				dataNascimento = dataNascimento.replaceAll("[-/.]", "");
 			}
-			
+
 			dataNascimento = formataDataNascimento(dataNascimento);
-			
+
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 			dateFormat.setLenient(false);
 			dateFormat.parse(dataNascimento);
-			
+
 		} catch (ParseException e) {
 			throw new IllegalArgumentException("Data de nascimento inválida: " + e.getMessage());
 		}
-		
+
 		return dataNascimento;
 	}
 
 	private String formataDataNascimento(String dataNascimento) {
-		
-		return dataNascimento.substring(0, 2) + "-" + dataNascimento.substring(2, 4) + "-" + dataNascimento.substring(4);
+
+		return dataNascimento.substring(0, 2) + "-" + dataNascimento.substring(2, 4) + "-"
+				+ dataNascimento.substring(4);
 	}
 }

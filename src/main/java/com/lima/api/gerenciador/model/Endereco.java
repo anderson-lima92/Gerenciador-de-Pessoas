@@ -2,6 +2,7 @@ package com.lima.api.gerenciador.model;
 
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.lima.api.gerenciador.util.BooleanToStringConverter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +41,7 @@ public class Endereco {
 	private String cidade;
 
 	@Column(name = "endereco_principal", nullable = false)
+	@Convert(converter = BooleanToStringConverter.class)
 	private Boolean enderecoPrincipal;
 
 	@ManyToOne
