@@ -337,10 +337,35 @@ class PessoaServiceTest {
 	
 	@Test
 	void listarTodasPessoas() {
+		
+		Pessoa pessoa = new Pessoa();
+		pessoa.setNome("Homer simpson");
+		
+		List<Pessoa> pessoas = new ArrayList<>();
+		pessoas.add(pessoa);
+		
+		when(pessoaRepository.findAll()).thenReturn(pessoas);
 
 		pessoaService.listarTodasPessoas();
-
+		
 		verify(pessoaRepository).findAll();
+		
+		assertNotNull(pessoas);
+	}
+	
+	@Test
+	void listarTodasPessoas_lista_sem_dados() {
+		
+		List<Pessoa> pessoas = new ArrayList<>();
+		pessoas.isEmpty();
+		
+		when(pessoaRepository.findAll()).thenReturn(pessoas);
+		
+		assertThrows(RuntimeException.class, () -> pessoaService.listarTodasPessoas());
+		
+		verify(pessoaRepository).findAll();
+		
+		assertTrue(pessoas.isEmpty());
 	}
 	
 	@Test
