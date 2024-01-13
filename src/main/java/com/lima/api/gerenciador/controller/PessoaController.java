@@ -42,7 +42,7 @@ public class PessoaController {
 	}
 
 	@GetMapping("{cpf}")
-	public ResponseEntity<?> buscarPessoaPorCpf(@PathVariable("cpf") String cpf) {
+	public ResponseEntity<?> buscarPessoaPorCpf(@PathVariable("cpf") Long cpf) {
 		try {
 			Optional<Pessoa> pessoa = pessoaService.consultarPessoa(cpf);
 			return ResponseEntity.status(HttpStatus.OK).body(pessoa);
@@ -52,7 +52,7 @@ public class PessoaController {
 	}
 
 	@PutMapping("{cpf}")
-	public ResponseEntity<Object> updatePessoaPorCpf(@PathVariable("cpf") String cpf, @RequestBody PessoaDTO update) {
+	public ResponseEntity<Object> updatePessoaPorCpf(@PathVariable("cpf") Long cpf, @RequestBody PessoaDTO update) {
 		try {
 			pessoaService.atualizarPessoa(cpf, update);
 			return ResponseEntity.status(HttpStatus.OK).body("Dados atualizados com sucesso!");
@@ -62,7 +62,7 @@ public class PessoaController {
 	}
 
 	@DeleteMapping("{cpf}")
-	public ResponseEntity<Object> deletePessoaPorCpf(@PathVariable("cpf") String cpf) {
+	public ResponseEntity<Object> deletePessoaPorCpf(@PathVariable("cpf") Long cpf) {
 		try {
 			pessoaService.deletarPessoa(cpf);
 			return ResponseEntity.status(HttpStatus.OK).body("Deletado com sucesso!");
@@ -82,7 +82,7 @@ public class PessoaController {
 	}
 	
 	@GetMapping("/{cpf}/endereco-principal")
-	public ResponseEntity<Object> buscaEnderecoPrincipalPorCpf(@PathVariable("cpf") String cpf) {
+	public ResponseEntity<Object> buscaEnderecoPrincipalPorCpf(@PathVariable("cpf") Long cpf) {
 		try {
 			Map<String, String> endereco = pessoaService.buscarEnderecoPrincipalPorCpf(cpf);
 			return ResponseEntity.status(HttpStatus.OK).body(endereco);

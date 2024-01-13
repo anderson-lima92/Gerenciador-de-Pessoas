@@ -12,11 +12,11 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
-	Optional<Pessoa> findByCpf(String cpf);
+	Optional<Pessoa> findByCpf(Long cpf);
 
-	Pessoa findEnderecoPrincipalByCpf(String cpf);
+	Pessoa findEnderecoPrincipalByCpf(Long cpf);
 	
     @Modifying
     @Transactional
-    void deleteById(String id);
+    void deleteById(Long id);
 }

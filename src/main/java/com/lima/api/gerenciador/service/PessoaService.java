@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +16,7 @@ import com.lima.api.gerenciador.model.Pessoa;
 import com.lima.api.gerenciador.repository.EnderecoRepository;
 import com.lima.api.gerenciador.repository.PessoaRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +45,6 @@ public class PessoaService {
 		pessoa.setEnderecos(pessoaDTO.getEnderecos());
 
 		try {
-			pessoa.setCpf(pessoa.getCpf().replaceAll("[\\s.-]", ""));
 
 			validaCpf(pessoa.getCpf());
 			validaEnderecos(pessoa);
@@ -64,12 +62,11 @@ public class PessoaService {
 		}
 	}
 
-	public Optional<Pessoa> consultarPessoa(String cpf) {
+	public Optional<Pessoa> consultarPessoa(Long cpf) {
 
 		log.info("....................Buscando Pessoa....................");
 
 		try {
-			cpf = cpf.replaceAll("[\\s.-]", "");
 
 			validaCpf(cpf);
 
@@ -82,12 +79,11 @@ public class PessoaService {
 		}
 	}
 
-	public void atualizarPessoa(String cpf, PessoaDTO update) {
+	public void atualizarPessoa(Long cpf, PessoaDTO update) {
 
 		log.info("....................Atualaizando Dados....................");
 
 		try {
-			cpf = cpf.replaceAll("[\\s.-]", "");
 
 			validaCpf(cpf);
 
@@ -118,12 +114,11 @@ public class PessoaService {
 		}
 	}
 
-	public void deletarPessoa(String cpf) {
+	public void deletarPessoa(Long cpf) {
 
 		log.info("....................Removendo Pessoa....................");
 
 		try {
-			cpf = cpf.replaceAll("[\\s.-]", "");
 
 			validaCpf(cpf);
 
@@ -148,8 +143,7 @@ public class PessoaService {
 	    return pessoas;
 	}
 
-	public Map<String, String> buscarEnderecoPrincipalPorCpf(String cpf) {
-		cpf = cpf.replaceAll("[\\s.-]", "");
+	public Map<String, String> buscarEnderecoPrincipalPorCpf(Long cpf) {
 		validaCpf(cpf);
 		Pessoa pessoa = pessoaRepository.findEnderecoPrincipalByCpf(cpf);
 		for (Endereco endereco : pessoa.getEnderecos()) {
@@ -165,8 +159,8 @@ public class PessoaService {
 		throw new RuntimeException("Não foi encontrado um endereço principal para esta pessoa.");
 	}
 
-	private void validaCpf(String cpf) {
-		if (cpf.length() != 11) {
+	private void validaCpf(Long cpf) {
+		if (String.valueOf(cpf).length() != 11) {
 			throw new IllegalArgumentException("CPF inválido: (" + cpf + ") CPF deve conter 11 dígitos.");
 		}
 		Optional<Pessoa> pessoaExistente = pessoaRepository.findByCpf(cpf);
