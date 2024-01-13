@@ -17,12 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.lima.api.gerenciador.dto.PessoaDTO;
 import com.lima.api.gerenciador.model.Endereco;
@@ -30,9 +29,12 @@ import com.lima.api.gerenciador.model.Pessoa;
 import com.lima.api.gerenciador.repository.EnderecoRepository;
 import com.lima.api.gerenciador.repository.PessoaRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
 
+@ExtendWith(MockitoExtension.class)
 class PessoaServiceTest {
 
+	@InjectMocks
 	private PessoaService pessoaService;
 
 	@Mock
@@ -43,12 +45,6 @@ class PessoaServiceTest {
 
 	@Mock
 	private HttpServletRequest request;
-
-	@BeforeEach
-	void start() {
-		MockitoAnnotations.openMocks(this);
-		pessoaService = new PessoaService(pessoaRepository, enderecoRepository, request);
-	}	
 	
 	@Test
 	void criarPessoa() throws ParseException {
@@ -59,7 +55,7 @@ class PessoaServiceTest {
 		List<Endereco> enderecos = new ArrayList<>();
 		enderecos.add(endereco);
 		PessoaDTO pessoa = new PessoaDTO();
-		pessoa.setCpf("12548963254");
+		pessoa.setCpf(45219835145L);
 		pessoa.setEnderecos(enderecos);
 		pessoa.setDataNascimento("10-10-2015");
 
@@ -68,7 +64,7 @@ class PessoaServiceTest {
 		pessoaService.criarPessoa(pessoa);
 		
 		assertNotNull(pessoa.getCpf());
-		assertEquals(pessoa.getCpf().length(), 11);
+		assertEquals(String.valueOf(pessoa.getCpf()).length(), 11);
 		
 		verify(pessoaRepository, atLeastOnce()).findByCpf(any());
 		verify(request,  atLeastOnce()).getMethod();
@@ -83,7 +79,7 @@ class PessoaServiceTest {
 		List<Endereco> enderecos = new ArrayList<>();
 		enderecos.add(endereco);
 		PessoaDTO pessoa = new PessoaDTO();
-		pessoa.setCpf("12548963254");
+		pessoa.setCpf(45219835145L);
 		pessoa.setEnderecos(enderecos);
 		pessoa.setDataNascimento("102015");
 
@@ -110,7 +106,7 @@ class PessoaServiceTest {
 		enderecos.add(endereco);
 		enderecos.add(endereco2);
 		PessoaDTO pessoa = new PessoaDTO();
-		pessoa.setCpf("12548963254");
+		pessoa.setCpf(45219835145L);
 		pessoa.setEnderecos(enderecos);
 
 		when(request.getMethod()).thenReturn("POST");
@@ -132,7 +128,7 @@ class PessoaServiceTest {
 		List<Endereco> enderecos = new ArrayList<>();
 		enderecos.add(endereco);
 		PessoaDTO pessoa = new PessoaDTO();
-		pessoa.setCpf("12548963254");
+		pessoa.setCpf(45219835145L);
 		pessoa.setEnderecos(enderecos);
 
 		when(request.getMethod()).thenReturn("POST");
@@ -153,7 +149,7 @@ class PessoaServiceTest {
 		List<Endereco> enderecos = new ArrayList<>();
 		enderecos.add(endereco);
 		PessoaDTO pessoa = new PessoaDTO();
-		pessoa.setCpf("12548963254");
+		pessoa.setCpf(45219835145L);
 		pessoa.setEnderecos(enderecos);
 
 		when(request.getMethod()).thenReturn("POST");
@@ -180,17 +176,17 @@ class PessoaServiceTest {
 	@Test
 	void criarPessoa_exception_cpf_invalido() {
 		PessoaDTO pessoa = new PessoaDTO();
-		pessoa.setCpf("215897");
+		pessoa.setCpf(452198L);
 
 		assertThrows(RuntimeException.class, () -> pessoaService.criarPessoa(pessoa));
 
-		assertNotEquals(pessoa.getCpf().length(), 11);
+		assertNotEquals(pessoa.getCpf(), 11);
 	}
 
 	@Test
 	void criarPessoa_exception_cpf_existente() {
 		PessoaDTO pessoaDTO = new PessoaDTO();
-		pessoaDTO.setCpf("12548963254");
+		pessoaDTO.setCpf(45219835145L);
 		
 		Pessoa pessoa = new Pessoa();
 
@@ -209,10 +205,10 @@ class PessoaServiceTest {
 	
 	@Test
 	void consultarPessoa() {
-		String cpf = "12458632501";
+		Long cpf = 45219835145L;
 		
 		Pessoa pessoa = new Pessoa();
-		pessoa.setCpf("12458632501");
+		pessoa.setCpf(cpf);
 
 		when(pessoaRepository.findByCpf(any())).thenReturn(Optional.of(pessoa));
 
@@ -220,8 +216,8 @@ class PessoaServiceTest {
 
 		pessoaService.consultarPessoa(cpf);
 		
-		assertNotNull(cpf);
-		assertEquals(cpf.length(), 11);
+		assertNotNull(pessoa.getCpf());
+		assertEquals(String.valueOf(pessoa.getCpf()).length(), 11);
 		
 		verify(pessoaRepository, atLeastOnce()).findByCpf(any());
 		verify(request,  atLeastOnce()).getMethod();
@@ -229,7 +225,7 @@ class PessoaServiceTest {
 	
 	@Test
 	void consultarPessoa_cpf_nao_encontrado() {
-		String cpf = "12458632501";
+		Long cpf = 45219835145L;
 
 		when(pessoaRepository.findByCpf(any())).thenReturn(Optional.empty());
 
@@ -238,7 +234,7 @@ class PessoaServiceTest {
 		assertThrows(RuntimeException.class, () -> pessoaService.consultarPessoa(cpf));
 		
 		assertNotNull(cpf);
-		assertEquals(cpf.length(), 11);
+		assertEquals(String.valueOf(cpf).length(), 11);
 		
 		verify(pessoaRepository, atLeastOnce()).findByCpf(any());
 		verify(request,  atLeastOnce()).getMethod();
@@ -257,7 +253,7 @@ class PessoaServiceTest {
 		Pessoa pessoa = new Pessoa();
 		
 		PessoaDTO pessoaDTO = new PessoaDTO();
-		pessoaDTO.setCpf("12458963254");
+		pessoaDTO.setCpf(45219835145L);
 		pessoaDTO.setEnderecos(enderecos);
 		pessoaDTO.setDataNascimento("31012015");
 		
@@ -270,7 +266,7 @@ class PessoaServiceTest {
 		pessoaService.atualizarPessoa(pessoaDTO.getCpf(), pessoaDTO);
 		
 		assertNotNull(pessoaDTO.getCpf());
-		assertEquals(pessoaDTO.getCpf().length(), 11);
+		assertEquals(String.valueOf(pessoaDTO.getCpf()).length(), 11);
 		
 		verify(pessoaRepository, atLeastOnce()).findByCpf(any());
 		verify(request,  atLeastOnce()).getMethod();
@@ -280,7 +276,7 @@ class PessoaServiceTest {
 	
 	@Test
 	void atualizarPessoa_cpf_nao_encontrado() {
-		String cpf = "12458632501";
+		Long cpf = 45219835145L;
 		PessoaDTO update = new PessoaDTO();
 
 		when(pessoaRepository.findByCpf(any())).thenReturn(Optional.empty());
@@ -295,20 +291,20 @@ class PessoaServiceTest {
 	
 	@Test
 	void atualizarPessoa_exception() {
-		String cpf = "1245";
+		Long cpf = 4521983L;
 		PessoaDTO update = new PessoaDTO();
 
 		assertThrows(RuntimeException.class, () -> pessoaService.atualizarPessoa(cpf, update));
 		
-		assertNotEquals(cpf.length(), 11);
+		assertNotEquals(String.valueOf(cpf).length(), 11);
 	}
 	
 	@Test
 	void deletarPessoa() {
-		String cpf = "58963254158";
+		Long cpf = 45219835145L;
 		
 		Pessoa pessoa = new Pessoa();
-		pessoa.setCpf("58963254158");
+		pessoa.setCpf(45219835145L);
 
 		when(pessoaRepository.findByCpf(any())).thenReturn(Optional.of(pessoa));
 		
@@ -317,7 +313,7 @@ class PessoaServiceTest {
 		pessoaService.deletarPessoa(cpf);
 		
 		assertNotNull(cpf);
-		assertEquals(cpf.length(), 11);
+		assertEquals(String.valueOf(pessoa.getCpf()).length(), 11);
 		
 		verify(pessoaRepository, atLeastOnce()).findByCpf(any());
 		verify(request,  atLeastOnce()).getMethod();
@@ -326,12 +322,12 @@ class PessoaServiceTest {
 	
 	@Test
 	void deletarPessoa_exception_erro_deletar_pessoa() {
-		String cpf = "1245";
+		Long cpf = 45219835145L;
 
 		assertThrows(RuntimeException.class, () -> pessoaService.deletarPessoa(cpf));
 		
 		assertNotNull(cpf);
-		assertNotEquals(cpf.length(), 11);
+		assertNotEquals(cpf, 11);
 		
 	}
 	
@@ -370,7 +366,7 @@ class PessoaServiceTest {
 	
 	@Test
 	void buscarEnderecoPrincipalPorCpf() {
-		String cpf = "52136589632";
+		Long cpf = 45219835145L;
 		
 		Endereco endereco = new Endereco();
 		endereco.setCep("12548963");
@@ -401,7 +397,7 @@ class PessoaServiceTest {
 	
 	@Test
 	void buscarEnderecoPrincipalPorCpf_sem_endereco_principal() {
-		String cpf = "52136589632";
+		Long cpf = 45219835145L;
 		
 		Endereco endereco = new Endereco();
 		endereco.setCep("12548963");

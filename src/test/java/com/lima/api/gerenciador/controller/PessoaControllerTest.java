@@ -14,10 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -26,25 +27,21 @@ import com.lima.api.gerenciador.exception.ErrorResponse;
 import com.lima.api.gerenciador.model.Pessoa;
 import com.lima.api.gerenciador.service.PessoaService;
 
+@ExtendWith(MockitoExtension.class)
 class PessoaControllerTest {
 	
+	@InjectMocks
 	private PessoaController pessoaController;
 
 	@Mock
 	private PessoaService pessoaService;
-	
-	@BeforeEach
-	void start() {
-		MockitoAnnotations.openMocks(this);
-		pessoaController = new PessoaController(pessoaService);
-	}	
 
 	@Test
 	void createPessoa() {
 		PessoaDTO pessoaDTO = new PessoaDTO();
 	    Pessoa pessoa = new Pessoa();
 	    pessoa.setNome("teste");
-	    pessoa.setCpf("12345678901");
+	    pessoa.setCpf(45219835145L);
 
 	    when(pessoaService.criarPessoa(any())).thenReturn(pessoa);
 
@@ -59,7 +56,7 @@ class PessoaControllerTest {
 		PessoaDTO pessoaDTO = new PessoaDTO();
 	    Pessoa pessoa = new Pessoa();
 	    pessoa.setNome("teste");
-	    pessoa.setCpf("12345678901");
+	    pessoa.setCpf(45219835145L);
 
 	    when(pessoaService.criarPessoa(any())).thenThrow(new RuntimeException("Erro ao criar pessoa"));
 
@@ -72,7 +69,7 @@ class PessoaControllerTest {
 	
 	@Test
 	void BuscarPessoaPorCpf_quandoCpfExiste() {
-	    String cpf = "12345678901";
+	    Long cpf = 45219835145L;
 	    Pessoa pessoaEsperada = new Pessoa();
 	    pessoaEsperada.setCpf(cpf);
 	    when(pessoaService.consultarPessoa(cpf)).thenReturn(Optional.of(pessoaEsperada));
@@ -85,7 +82,7 @@ class PessoaControllerTest {
 	
 	@Test
 	void BuscarPessoaPorCpf_quandoServiceLancaException() {
-	    String cpf = "12345678901";
+	    Long cpf = 45219835145L;
 	    String mensagemEsperada = "Erro ao buscar pessoa por CPF";
 	    when(pessoaService.consultarPessoa(cpf)).thenThrow(new RuntimeException(mensagemEsperada));
 
@@ -99,10 +96,9 @@ class PessoaControllerTest {
 	@Test
 	void AtualizarPessoaPorCpf_Success() {
 		PessoaDTO pessoaDTO = new PessoaDTO();
-	    String cpf = "48965231578";
+	    Long cpf = 45219835145L;
 	    Pessoa pessoa = new Pessoa();
 	    pessoa.setCpf(cpf);
-	    when(pessoaService.consultarPessoa(cpf)).thenReturn(Optional.of(pessoa));
 
 	    ResponseEntity<Object> response = pessoaController.updatePessoaPorCpf(cpf, pessoaDTO);
 
@@ -114,10 +110,10 @@ class PessoaControllerTest {
 	@Test
 	void AtualizarPessoaPorCpf_RuntimeException() {
 		PessoaDTO pessoaDTO = new PessoaDTO();
-	    String cpf = "89745632158";
+	    Long cpf = 45219835145L;
 	    Pessoa pessoa = new Pessoa();
 	    pessoa.setCpf(cpf);
-	    when(pessoaService.consultarPessoa(cpf)).thenReturn(Optional.of(pessoa));
+	    
 	    doThrow(new RuntimeException("Erro ao atualizar pessoa")).when(pessoaService).atualizarPessoa(cpf, pessoaDTO);
 
 	    ResponseEntity<Object> response = pessoaController.updatePessoaPorCpf(cpf, pessoaDTO);
@@ -129,9 +125,7 @@ class PessoaControllerTest {
 	
 	@Test
 	void deletePessoaPorCpf_ComSucesso() {
-	    String cpf = "15897456325";
-	    Pessoa pessoa = new Pessoa();
-	    when(pessoaService.consultarPessoa(cpf)).thenReturn(Optional.of(pessoa));
+	    Long cpf = 45219835145L;
 	    
 	    ResponseEntity<Object> response = pessoaController.deletePessoaPorCpf(cpf);
 
@@ -142,7 +136,7 @@ class PessoaControllerTest {
 
 	@Test
 	void deletePessoaPorCpf_PessoaNaoEncontrada() {
-	    String cpf = "12345678901";
+	    Long cpf = 45219835145L;
 	    doThrow(new RuntimeException("Erro ao deletar pessoa")).when(pessoaService).deletarPessoa(cpf);
 
 	    ResponseEntity<Object> response = pessoaController.deletePessoaPorCpf(cpf);
@@ -180,7 +174,7 @@ class PessoaControllerTest {
 	@Test
 	void buscaEnderecoPrincipalPorCpf_DeveRetornarEndereco_QuandoEncontrarCpf() {
 
-	    String cpf = "12345678910";
+	    Long cpf = 45219835145L;
 	    Map<String, String> enderecoEsperado = new HashMap<>();
 	    enderecoEsperado.put("rua", "Rua Teste");
 	    enderecoEsperado.put("numero", "123");
@@ -197,7 +191,7 @@ class PessoaControllerTest {
 	
 	@Test
 	void buscaEnderecoPrincipalPorCpf_DeveRetornarErro_QuandoNaoEncontrarCpf() {
-	    String cpf = "12345678910";
+	    Long cpf = 45219835145L;
 	    when(pessoaService.buscarEnderecoPrincipalPorCpf(cpf)).thenThrow(new RuntimeException("CPF não encontrado"));
 
 	    ResponseEntity<Object> response = pessoaController.buscaEnderecoPrincipalPorCpf(cpf);
