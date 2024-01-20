@@ -45,6 +45,16 @@ public class PessoaService {
 		pessoa.setEnderecos(pessoaDTO.getEnderecos());
 
 		try {
+			if (pessoaDTO.getEnderecos() != null && !pessoaDTO.getEnderecos().isEmpty()) {
+				List<Endereco> enderecos = pessoaDTO.getEnderecos();
+				enderecos.get(0).setEnderecoPrincipal(true);
+
+				for (int i = 1; i < enderecos.size(); i++) {
+					enderecos.get(i).setEnderecoPrincipal(false);
+				}
+
+				pessoa.setEnderecos(enderecos);
+			}
 
 			validaCpf(pessoa.getCpf());
 			validaEnderecos(pessoa);
@@ -71,6 +81,22 @@ public class PessoaService {
 			validaCpf(cpf);
 
 			Optional<Pessoa> pessoaEncontrada = pessoaRepository.findByCpf(cpf);
+			
+	        pessoaEncontrada.ifPresent(pessoa -> {
+	            List<Endereco> enderecos = pessoa.getEnderecos();
+
+	            if (!enderecos.isEmpty()) {
+	                Endereco enderecoPrincipal = enderecos.stream()
+	                        .filter(Endereco::isEnderecoPrincipal)
+	                        .findFirst()
+	                        .orElse(null);
+	                enderecos.remove(enderecoPrincipal);
+
+	                if (enderecoPrincipal != null) {
+	                    enderecos.add(0, enderecoPrincipal);
+	                }
+	            }
+	        });
 
 			return pessoaEncontrada;
 
