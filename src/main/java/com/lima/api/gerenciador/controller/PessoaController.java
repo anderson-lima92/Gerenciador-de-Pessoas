@@ -63,6 +63,16 @@ public class PessoaController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
 		}
 	}
+	
+	@DeleteMapping("/pessoas/desativacao/{cpf}")
+	public ResponseEntity<Object> desativaPessoaPorCpf(@PathVariable("cpf") Long cpf) {
+		try {
+			pessoaService.desativaPessoa(cpf);
+			return ResponseEntity.status(HttpStatus.OK).body("Desativado com sucesso!");
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+		}
+	}
 
 	@DeleteMapping("/pessoas/{cpf}")
 	public ResponseEntity<Object> deletePessoaPorCpf(@PathVariable("cpf") Long cpf) {

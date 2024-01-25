@@ -3,24 +3,29 @@ body {
 }
 
 #mensagemCadastro,
-#mensagemConsulta {
+#mensagemConsulta,
+#mensagemAtualizar {
     display: none;
     margin-bottom: 20px;
     padding: 10px;
     border-radius: 5px;
     text-align: right;
     position: absolute;
-    left: 60%;
+    left: auto;
+    right: 20px;
+
 }
 
-#mensagemCadastro.success {
+#mensagemCadastro.success,
+#mensagemAtualizar.success {
     background-color: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
 }
 
 #mensagemCadastro.error,
-#mensagemConsulta.error {
+#mensagemConsulta.error,
+#mensagemAtualizar.error {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
@@ -38,21 +43,29 @@ body {
     margin-left: 0px;
 }
 
+#atualizarPessoaForm {
+    max-width: 400px;
+    margin: 50px auto;
+    margin-left: 0px;
+}
+
 #createPessoaForm input[type="text"],
-#consultaPessoaForm input[type="text"] {
+#consultaPessoaForm input[type="text"],
+#atualizarPessoaForm input[type="text"] {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
     border: 1px solid #ccc;
-}
+}atualizarPessoaForm
 
 #enderecoPrincipal {
     margin: 10px 0;
 }
 
 #createPessoaForm input[type="submit"],
-#consultaPessoaForm input[type="submit"] {
+#consultaPessoaForm input[type="submit"],
+#atualizarPessoaForm input[type="submit"] {
     background-color: #4CAF50;
     color: white;
     padding: 15px 20px;
@@ -62,7 +75,8 @@ body {
 }
 
 #createPessoaForm input[type="submit"]:hover,
-#consultaPessoaForm input[type="submit"]:hover {
+#consultaPessoaForm input[type="submit"]:hover,
+#atualizarPessoaForm input[type="submit"]:hover {
     background-color: #45a049;
 }
 
@@ -141,4 +155,64 @@ body {
 #resultadoConsulta td .endereco {
     margin-left: 20px;
     display: block;
+}
+
+#resultadoConsultaCPF {
+    border-collapse: collapse;
+    width: 40%;
+    margin: 20px 120px;
+}
+
+#resultadoConsultaCPF th, #resultadoConsultaCPF td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#resultadoConsultaCPF th {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+
+}
+
+#resultadoConsultaCPF th, #resultadoConsultaCPF td {
+    width: 30%;
+}
+
+#resultadoConsultaCPF th:nth-child(1), #resultadoConsultaCPF td:nth-child(1) {
+    font-weight: bold;
+}
+
+#resultadoConsultaCPF td {
+    font-size: 0.9em;
+}
+
+#resultadoConsultaCPF td:nth-child(2) {
+    width: 60%;
+}
+
+#resultadoConsultaCPFBody td input[type="text"] {
+    width: 97%;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#botaoAtualizar {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+#botaoAtualizar:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
 }

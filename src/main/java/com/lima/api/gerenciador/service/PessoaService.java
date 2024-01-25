@@ -62,9 +62,11 @@ public class PessoaService {
 			String dataNascimento = validaDataNascimento(pessoa.getDataNascimento());
 
 			pessoa.setDataNascimento(dataNascimento);
+			
+			pessoa.setAtivo(true);
 
 			Pessoa pessoaSalva = pessoaRepository.save(pessoa);
-
+			
 			return pessoaSalva;
 
 		} catch (Exception e) {
@@ -126,6 +128,8 @@ public class PessoaService {
 				pessoa.setEnderecos(update.getEnderecos());
 
 				validaEnderecos(pessoa);
+				
+				pessoa.setAtivo(true);
 
 				pessoaRepository.save(pessoa);
 
@@ -137,6 +141,32 @@ public class PessoaService {
 
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao atualizar dados da pessoa: " + e.getMessage());
+		}
+	}
+	
+	public void desativaPessoa(Long cpf) {
+
+		log.info("....................Desativando Pessoa....................");
+
+		try {
+
+			validaCpf(cpf);
+
+			Optional<Pessoa> pessoaOpt = pessoaRepository.findByCpf(cpf);
+
+			if (pessoaOpt.isPresent()) {
+	            Pessoa pessoa = pessoaOpt.get();
+	            if(!pessoa.isAtivo()) {
+	            	throw new RuntimeException("Pessoa já está Desativado(a)");
+	            } 
+	            
+	            pessoa.setAtivo(false);
+	            
+	            pessoaRepository.save(pessoa);
+			}
+
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Atenção: " + e.getMessage());
 		}
 	}
 
@@ -193,7 +223,7 @@ public class PessoaService {
 		if (!(request.getMethod().equals("PUT") || request.getMethod().equals("GET")
 				|| request.getMethod().equals("DELETE"))) {
 			if (pessoaExistente.isPresent()) {
-				throw new IllegalArgumentException("Já existe uma pessoa com o CPF informado....");
+				throw new IllegalArgumentException("Já existe uma pessoa com o CPF informado.");
 			}
 		}
 
@@ -241,33 +271,32 @@ public class PessoaService {
 	}
 
 	private String formataCep(String cep) {
-		if (!cep.contains("-")) {
-			if (cep.length() == 8) {
-				cep = cep.substring(0, 5) + "-" + cep.substring(5);
-			} else {
-				throw new IllegalArgumentException("Cep inválido: (" + cep + ") Cep deve conter 8 dígitos numéricos.");
-			}
+		String cepLimpo = cep.replaceAll("[^\\d]", "");
+		if (cepLimpo.length() != 8) {
+			throw new IllegalArgumentException("Cep inválido: (" + cep + ") Cep deve conter 8 dígitos numéricos.");
 		}
-		return cep;
+		
+		return cepLimpo.substring(0, 5) + "-" + cepLimpo.substring(5);
 	}
 
 	private String validaDataNascimento(String dataNascimento) {
+		String dataNascimentoLimpa = dataNascimento.replaceAll("[^\\d]", "");
 		try {
-			if (dataNascimento.contains("-") || dataNascimento.contains("/") || dataNascimento.contains(".")) {
-				dataNascimento = dataNascimento.replaceAll("[-/.]", "");
+			if (dataNascimentoLimpa.length() < 6) {
+				throw new IllegalArgumentException("Data de Nascimento inválida: (" + dataNascimentoLimpa + ") Data deve conter DD-MM-YYYY.");
 			}
 
-			dataNascimento = formataDataNascimento(dataNascimento);
+			dataNascimentoLimpa = formataDataNascimento(dataNascimentoLimpa);
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 			dateFormat.setLenient(false);
-			dateFormat.parse(dataNascimento);
+			dateFormat.parse(dataNascimentoLimpa);
 
 		} catch (ParseException e) {
 			throw new IllegalArgumentException("Data de nascimento inválida: " + e.getMessage());
 		}
 
-		return dataNascimento;
+		return dataNascimentoLimpa;
 	}
 
 	private String formataDataNascimento(String dataNascimento) {

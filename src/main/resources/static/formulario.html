@@ -9,6 +9,7 @@
 		<h1 style="float: left; color: #8499d7; font-size: 22px; padding-left: 20px; padding-right: 20px;">Gerenciador de Pessoas</h1>
 	  	<button class="tablinks" onclick="openForm(event, 'Cadastrar')">Cadastrar Pessoa</button>
 	  	<button class="tablinks" onclick="openForm(event, 'Consultar')">Consultar Pessoa</button>
+	  	<button class="tablinks" onclick="openForm(event, 'Atualizar')">Atualizar Pessoa</button>
 	</div>
 	
 	    <!-- Conteúdo da aba Cadastrar -->
@@ -18,9 +19,9 @@
 	    <form id="createPessoaForm">
 	        <input type="text" id="nome" placeholder="Nome" required><br>
 	        <input type="text" id="cpf" placeholder="CPF" required pattern="[0-9]*" title="Digite apenas números">
-	        <input type="text" id="dataNascimento" placeholder="Data de Nascimento" pattern="[0-9]*" title="Digite apenas números">
+	        <input type="text" id="dataNascimento" placeholder="Data de Nascimento" required pattern="[0-9]*" title="Digite apenas números">
 	        <input type="text" id="logradouro" placeholder="Logradouro" required><br>
-	        <input type="text" id="cep" placeholder="CEP" pattern="[0-9]*" title="Digite apenas números">
+	        <input type="text" id="cep" placeholder="CEP" required pattern="[0-9]*" title="Digite apenas números">
 	        <input type="text" id="numero" placeholder="Número" required pattern=".*\d.*" title="Digite pelo menos 1 caractere numérico no número">
 	        <input type="text" id="cidade" placeholder="Cidade" required><br>
 	        <input type="submit" value="Cadastrar Pessoa">
@@ -41,18 +42,19 @@
 		<table id="resultadoConsulta">
 		    <thead>
 		        <tr>
-		            <th colspan="3">Informações Pessoais</th>
-		            <th colspan="5">Endereços</th>
+		            <th colspan="4">INFORMAÇÕES PESSOAIS</th>
+		            <th colspan="5">EMDEREÇOS</th>
 		        </tr>
 		        <tr>
 		            <th>CPF</th>
-		            <th>Nome</th>
-		            <th>Data de Nascimento</th>
-		            <th>Logradouro</th>
+		            <th>STATUS</th>
+		            <th>NOME</th>
+		            <th>DATA DE NASCIMENTO</th>
+		            <th>LOGRADOURO</th>
 		            <th>CEP</th>
-		            <th>Número</th>
-		            <th>Cidade</th>
-		            <th>Endereço Principal</th>
+		            <th>NÚMERO</th>
+		            <th>CIDADE</th>
+		            <th>ENDEREÇO PRINCIAL</th>
 		        </tr>
 		    </thead>
 		    <tbody id="resultadoBody">
@@ -60,7 +62,32 @@
 		    </tbody>
 		</table>
 	</div>
-    
+
+	<!-- Conteúdo da aba Atualizar -->
+	<div id="Atualizar" class="tabcontent">
+	    <div id="mensagemAtualizar" style="display:none;"></div>
+	    <!-- Formulário de consulta -->
+	    <form id="atualizarPessoaForm">
+	        <label for="cpfConsultaAtualizar">CPF:</label>
+	        <input type="text" id="cpfConsultaAtualizar" placeholder="Digite o CPF" required pattern="[0-9]*" title="Digite apenas números">
+	        <input type="submit" value="Consultar Pessoa">
+	    </form>
+	
+	    <!-- Tabela para exibir resultados -->
+	    <table id="resultadoConsultaCPF">
+	        <thead>
+	            <tr>
+	                <!-- Título da tabela abrangendo duas colunas -->
+	                <th colspan="2">INFORMAÇÕES PESSOAIS</th>
+	            </tr>
+	        </thead>
+	        <tbody id="resultadoConsultaCPFBody">
+	            <!-- Resultados serão inseridos aqui dinamicamente -->
+	        </tbody>
+	    </table>
+	     <button id="botaoAtualizar" style="display: none;">Atualizar</button>
+	</div>
+	    
 
 
     <script src="/script.js"></script>

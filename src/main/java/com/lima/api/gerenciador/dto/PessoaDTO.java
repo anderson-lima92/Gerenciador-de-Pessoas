@@ -14,5 +14,6 @@ public class PessoaDTO {
 	private Long cpf;
 	private String dataNascimento;
 	private List<Endereco> enderecos;
+	private boolean ativo;
 
 }

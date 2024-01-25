@@ -37,11 +37,18 @@ public class Pessoa {
 	
 	@Column(name = "cpf", nullable = false)
 	private Long cpf;
+	
+	@Column(name = "ativo", nullable = false)
+	private boolean ativo;
 
 	@Column(name = "data_nascimento", nullable = false)
 	private String dataNascimento;
 
 	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos;
+	
+    public boolean isAtivo() {
+    	return this.ativo;
+    }
 
 }
