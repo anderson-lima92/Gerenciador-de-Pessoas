@@ -83,22 +83,6 @@ public class PessoaService {
 			validaCpf(cpf);
 
 			Optional<Pessoa> pessoaEncontrada = pessoaRepository.findByCpf(cpf);
-			
-	        pessoaEncontrada.ifPresent(pessoa -> {
-	            List<Endereco> enderecos = pessoa.getEnderecos();
-
-	            if (!enderecos.isEmpty()) {
-	                Endereco enderecoPrincipal = enderecos.stream()
-	                        .filter(Endereco::isEnderecoPrincipal)
-	                        .findFirst()
-	                        .orElse(null);
-	                enderecos.remove(enderecoPrincipal);
-
-	                if (enderecoPrincipal != null) {
-	                    enderecos.add(0, enderecoPrincipal);
-	                }
-	            }
-	        });
 
 			return pessoaEncontrada;
 
@@ -193,7 +177,7 @@ public class PessoaService {
 	    List<Pessoa> pessoas = pessoaRepository.findAll();
 	    
 	    if (pessoas.isEmpty()) {
-	        throw new RuntimeException("Não há dados para esta pesquisa");
+	        throw new RuntimeException("Não há dados para listar!");
 	    }
 	    
 	    return pessoas;

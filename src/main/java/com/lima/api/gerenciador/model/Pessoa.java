@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -45,6 +46,7 @@ public class Pessoa {
 	private String dataNascimento;
 
 	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+	@OrderBy("enderecoPrincipal DESC")
 	private List<Endereco> enderecos;
 	
     public boolean isAtivo() {

@@ -10,6 +10,7 @@
 	  	<button class="tablinks" onclick="openForm(event, 'Cadastrar')">Cadastrar Pessoa</button>
 	  	<button class="tablinks" onclick="openForm(event, 'Consultar')">Consultar Pessoa</button>
 	  	<button class="tablinks" onclick="openForm(event, 'Atualizar')">Atualizar Pessoa</button>
+	  	<button class="tablinks" onclick="openForm(event, 'Listar')">Listar Pessoas</button>
 	</div>
 	
 	    <!-- Conteúdo da aba Cadastrar -->
@@ -87,10 +88,44 @@
 	    </table>
 	     <button id="botaoAtualizar" style="display: none;">Atualizar</button>
 	</div>
+	
+		<!-- Conteúdo da aba Listar/Desativat/Deletar -->
+	<div id="Listar" class="tabcontent">
+		<div id="mensagemListar" style="display:none;"></div>
+	    <!-- Formulário de Listar/Desativat/Deletar -->
+	    <form id="listarPessoasForm">
+	        <input type="submit" value="Buscar">
+	    </form>
+	
+	    <!-- Tabela para exibir resultados -->
+		<table id="resultadoListar">
+		    <thead>
+		        <tr>
+		            <th colspan="4">INFORMAÇÕES PESSOAIS</th>
+		            <th colspan="5">EMDEREÇOS</th>
+		        </tr>
+		        <tr>
+		            <th>CPF</th>
+		            <th>STATUS</th>
+		            <th>NOME</th>
+		            <th>DATA DE NASCIMENTO</th>
+		            <th>LOGRADOURO</th>
+		            <th>CEP</th>
+		            <th>NÚMERO</th>
+		            <th>CIDADE</th>
+		            <th>ENDEREÇO PRINCIAL</th>
+		        </tr>
+		    </thead>
+		    <tbody id="resultadoBodyListar">
+		        <!-- Resultados serão inseridos aqui dinamicamente -->
+		    </tbody>
+		</table>
+	</div>
 	    
     <script src="/cabecalho.js"></script>
     <script src="/abaCadastrar.js"></script>
     <script src="/abaConsultar.js"></script>
     <script src="/abaAtualizar.js"></script>
+    <script src="/abaListarDesativarDeletar.js"></script>
 </body>
 </html>
