@@ -92,33 +92,37 @@
 		<!-- Conteúdo da aba Listar/Desativat/Deletar -->
 	<div id="Listar" class="tabcontent">
 		<div id="mensagemListar" style="display:none;"></div>
-	    <!-- Formulário de Listar/Desativat/Deletar -->
-	    <form id="listarPessoasForm">
-	        <input type="submit" value="Buscar">
-	    </form>
+		<!-- Formulário de Listar/Desativar/Deletar -->
+		<form id="listarPessoasForm">
+			<input type="submit" value="Buscar">
+		</form>
 	
-	    <!-- Tabela para exibir resultados -->
+		<!-- Tabela para exibir resultados -->
 		<table id="resultadoListar">
-		    <thead>
-		        <tr>
-		            <th colspan="4">INFORMAÇÕES PESSOAIS</th>
-		            <th colspan="5">EMDEREÇOS</th>
-		        </tr>
-		        <tr>
-		            <th>CPF</th>
-		            <th>STATUS</th>
-		            <th>NOME</th>
-		            <th>DATA DE NASCIMENTO</th>
-		            <th>LOGRADOURO</th>
-		            <th>CEP</th>
-		            <th>NÚMERO</th>
-		            <th>CIDADE</th>
-		            <th>ENDEREÇO PRINCIAL</th>
-		        </tr>
-		    </thead>
-		    <tbody id="resultadoBodyListar">
-		        <!-- Resultados serão inseridos aqui dinamicamente -->
-		    </tbody>
+			<thead>
+				<tr>
+					<th colspan="4">INFORMAÇÕES PESSOAIS</th>
+					<th colspan="5">ENDEREÇOS</th>
+					<th colspan="3">AÇÕES</th>
+				</tr>
+				<tr>
+					<th>CPF</th>
+					<th>STATUS</th>
+					<th>NOME</th>
+					<th>DATA DE NASCIMENTO</th>
+					<th>LOGRADOURO</th>
+					<th>CEP</th>
+					<th>NÚMERO</th>
+					<th>CIDADE</th>
+					<th>ENDEREÇO PRINCIPAL</th>
+					<th>ATIVAR</th>
+					<th>DESATIVAR</th>
+					<th>EXCLUIR</th>
+				</tr>
+			</thead>
+			<tbody id="resultadoBodyListar">
+				<!-- Resultados serão inseridos aqui dinamicamente -->
+			</tbody>
 		</table>
 	</div>
 	    
